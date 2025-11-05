@@ -1,10 +1,26 @@
 package com.gmail.nossr50.skills.herbalism;
 
-import static com.gmail.nossr50.util.ItemUtils.hasItemIncludingOffHand;
-import static com.gmail.nossr50.util.ItemUtils.removeItemIncludingOffHand;
-import static com.gmail.nossr50.util.Misc.getBlockCenter;
-import static com.gmail.nossr50.util.text.ConfigStringUtils.getMaterialConfigString;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import static java.util.Objects.requireNonNull;
+import java.util.Set;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.NotNull;
 
 import com.gmail.nossr50.api.ItemSpawnReason;
 import com.gmail.nossr50.config.experience.ExperienceConfig;
@@ -30,6 +46,7 @@ import com.gmail.nossr50.util.EventUtils;
 import com.gmail.nossr50.util.ItemUtils;
 import com.gmail.nossr50.util.MetadataConstants;
 import com.gmail.nossr50.util.Misc;
+import static com.gmail.nossr50.util.Misc.getBlockCenter;
 import com.gmail.nossr50.util.Permissions;
 import com.gmail.nossr50.util.player.NotificationManager;
 import com.gmail.nossr50.util.random.ProbabilityUtil;
@@ -37,26 +54,8 @@ import com.gmail.nossr50.util.skills.RankUtils;
 import com.gmail.nossr50.util.skills.SkillUtils;
 import com.gmail.nossr50.util.sounds.SoundManager;
 import com.gmail.nossr50.util.sounds.SoundType;
+import static com.gmail.nossr50.util.text.ConfigStringUtils.getMaterialConfigString;
 import com.gmail.nossr50.util.text.StringUtils;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.Ageable;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.jetbrains.annotations.NotNull;
 
 public class HerbalismManager extends SkillManager {
     private final static HashMap<String, Integer> plantBreakLimits;
@@ -827,7 +826,7 @@ public class HerbalismManager extends SkillManager {
                 new RecentlyReplantedCropMeta(mcMMO.p, true));
     }
 
-    /**
+/**
      * Process the Green Thumb ability for plants.
      *
      * @param blockState The {@link BlockState} to check ability activation for
@@ -880,9 +879,10 @@ public class HerbalismManager extends SkillManager {
             return false;
         }
 
-        if (!hasItemIncludingOffHand(player, replantMaterial)) {
-            return false;
-        }
+        // REMOVED: No longer checks if player has the replant material in inventory
+        // if (!hasItemIncludingOffHand(player, replantMaterial)) {
+        //     return false;
+        // }
 
         if (EventUtils.callSubSkillBlockEvent(player, SubSkillType.HERBALISM_GREEN_THUMB,
                         blockState.getBlock())
@@ -892,8 +892,8 @@ public class HerbalismManager extends SkillManager {
             if (!processGrowingPlants(blockState, ageable, blockBreakEvent, greenTerra)) {
                 return false;
             }
-            // remove the item from the player's inventory
-            removeItemIncludingOffHand(player, replantMaterial, 1);
+            // REMOVED: No longer removes item from player's inventory
+            // removeItemIncludingOffHand(player, replantMaterial, 1);
             // player.updateInventory(); // Needed until replacement available
 
             //Play sound
